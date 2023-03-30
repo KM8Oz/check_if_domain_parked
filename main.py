@@ -47,22 +47,23 @@ domain_names = generate_combinations(regex, legal_chars, tld, max_length)
 # test  " r'^[a-zA-Z]{2}\.ma$' "
 # Check if each domain name is available
 available_domains = []
-def CheckName(name):
+def is_registered(domain_name):
+    """
+    A function that returns a boolean indicating 
+    whether a `domain_name` is registered
+    """
     try:
-        w = whois.query(name, True)
-        if w.name == None:
-            # If the domain is not registered, add it to the list of available domains
-            print(f"Found [{w.name}] ✅")
-            return w.name
-        else:
-            return None
-    except:
+        w = whois.query(domain_name)
+        # print(w.registrant)
+    except Exception:
         return None
+    else:
+        return w.name
 with concurrent.futures.ThreadPoolExecutor(10) as executor:
        # Define a function to check if each name matches the pattern
        
        # Submit each name to the executor to check if it matches the pattern
-       futures = [executor.submit(CheckName, name) for name in domain_names]
+       futures = [executor.submit(is_registered, name) for name in domain_names]
        # Collect the results of the futures and add each name that matches the pattern to the filtered list
        for future in concurrent.futures.as_completed(futures):
            if future.result():
