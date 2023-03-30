@@ -29,6 +29,6 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: main-binary-${{ matrix.os }}
-        path: dist/main
+        path: dist/domainfinder
       env:
         GITHUB_TOKEN: ${{ secrets.MY_PAT }}
